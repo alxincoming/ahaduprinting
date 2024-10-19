@@ -114,16 +114,16 @@
 
             <!-- Mobile Menu -->
             <div id="mobile-menu" class="absolute top-16 right-0 bg-blue-600 text-white w-full md:hidden text-center">
-                <a href="#services" class="block py-2 hover:bg-blue-700 transition">Services</a>
-                <a href="#about" class="block py-2 hover:bg-blue-700 transition">About Us</a>
-                <a href="#contact" class="block py-2 hover:bg-blue-700 transition">Contact</a>
+                <a href="service.html" class="block py-2 hover:bg-blue-700 transition">Services</a>
+                <a href="about.html" class="block py-2 hover:bg-blue-700 transition">About Us</a>
+                <a href="contact.html" class="block py-2 hover:bg-blue-700 transition">Contact</a>
             </div>
 
             <!-- Desktop Navigation Links -->
             <div class="hidden md:flex space-x-6">
-                <a href="#services" class="text-white hover:text-gray-200 transition">Services</a>
-                <a href="#about" class="text-white hover:text-gray-200 transition">About Us</a>
-                <a href="#contact" class="text-white hover:text-gray-200 transition">Contact</a>
+                <a href="service.html" class="text-white hover:text-gray-200 transition">Services</a>
+                <a href="about.html" class="text-white hover:text-gray-200 transition">About Us</a>
+                <a href="contact.html" class="text-white hover:text-gray-200 transition">Contact</a>
             </div>
         </div>
     </nav>
@@ -199,6 +199,7 @@
             const phoneNumber = document.getElementById('phoneNumber').value;
             const additionalInfo = document.getElementById('additionalInfo').value;
 
+            // Validate form
             if (!phoneNumber || !fileInput.files.length) {
                 errorMessage.style.display = 'block';  // Show error message
                 return;
@@ -211,7 +212,7 @@
             formData.append('phoneNumber', phoneNumber);
             formData.append('additionalInfo', additionalInfo);
 
-            // Show loading overlay
+            // Show loading overlay when form is valid and submitting
             loadingOverlay.style.display = 'flex';
 
             // Send form data via Fetch API
