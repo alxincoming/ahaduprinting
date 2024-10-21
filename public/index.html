@@ -201,7 +201,7 @@
             .then(data => {
                 submitBtn.innerHTML = 'Submit Order';  // Reset the button text after submit
                 if (data.message) {
-                    confirmationMessage.style.display = 'block';  // Show confirmation message
+                    confirmationMessage.style.display = '';  // Show confirmation message
                     clearForm();  // Clear form data after submission
                 } else {
                     errorMessage.style.display = 'block';  // Show error message on failure
