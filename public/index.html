@@ -20,23 +20,48 @@
         .drop-zone:hover {
             background-color: #e0f2fe;
         }
-        .confirmation-message {
+        .confirmation-message, .error-message {
             display: none;
-            background-color: #28a745;
             color: white;
             padding: 20px;
             text-align: center;
             border-radius: 5px;
             margin-bottom: 20px;
         }
+        .confirmation-message {
+            background-color: #28a745;
+        }
         .error-message {
-            display: none;
             background-color: #dc3545;
+        }
+        /* Full screen loader overlay */
+        #loadingOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             color: white;
-            padding: 20px;
-            text-align: center;
-            border-radius: 5px;
-            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        /* Spinning loader */
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         /* Hamburger menu styling */
         .menu-icon {
@@ -58,12 +83,20 @@
 </head>
 <body class="bg-gray-50 font-sans">
 
+    <!-- Full-Screen Loading Overlay -->
+    <div id="loadingOverlay">
+        <div>
+            <div class="loader"></div>
+            <p class="mt-4">Submitting your order, please wait...</p>
+        </div>
+    </div>
+
     <!-- Navbar -->
     <nav class="bg-gradient-to-r from-blue-500 to-purple-600 shadow-md py-4">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <!-- Logo -->
             <div class="flex items-center">
-                <img src="logo.png" alt="Ahadu Printing Logo" class="h-12">
+                <img src="logo.html" alt="Ahadu Printing Logo" class="h-12">
                 <span class="ml-4 text-white text-2xl font-bold">Ahadu Printing</span>
             </div>
 
@@ -79,7 +112,7 @@
                 <span></span>
             </div>
 
-            <!-- Navigation Links -->
+            <!-- Mobile Menu -->
             <div id="mobile-menu" class="absolute top-16 right-0 bg-blue-600 text-white w-full md:hidden text-center">
                 <a href="service.html" class="block py-2 hover:bg-blue-700 transition">Services</a>
                 <a href="about.html" class="block py-2 hover:bg-blue-700 transition">About Us</a>
@@ -139,6 +172,7 @@
         const submitBtn = document.getElementById('submitBtn');
         const clearBtn = document.getElementById('clearBtn');
         const confirmationMessage = document.getElementById('confirmationMessage');
+        const loadingOverlay = document.getElementById('loadingOverlay');
         const errorMessage = document.getElementById('errorMessage');
         const menuToggle = document.getElementById('menu-toggle');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -165,6 +199,7 @@
             const phoneNumber = document.getElementById('phoneNumber').value;
             const additionalInfo = document.getElementById('additionalInfo').value;
 
+            // Validate form
             if (!phoneNumber || !fileInput.files.length) {
                 errorMessage.style.display = 'block';  // Show error message
                 return;
@@ -177,6 +212,9 @@
             formData.append('phoneNumber', phoneNumber);
             formData.append('additionalInfo', additionalInfo);
 
+            // Show loading overlay when form is valid and submitting
+            loadingOverlay.style.display = 'flex';
+
             // Send form data via Fetch API
             fetch('/api/submit-order', {
                 method: 'POST',
@@ -184,34 +222,38 @@
             })
             .then(response => response.json())
             .then(data => {
+                loadingOverlay.style.display = 'none';  // Hide loader
                 if (data.message) {
                     confirmationMessage.style.display = 'block';  // Show confirmation message
+                    clearForm();  // Clear form data after submission
                 } else {
                     errorMessage.style.display = 'block';  // Show error message
                 }
             })
             .catch(err => {
-                console.error('Error:', err);
+                loadingOverlay.style.display = 'none';  // Hide loader
                 errorMessage.style.display = 'block';  // Show error message
+                console.error('Error:', err);
             });
         });
 
         clearBtn.addEventListener('click', () => {
+            clearForm();
+        });
+
+        function clearForm() {
             fileInput.value = '';
             document.getElementById('phoneNumber').value = '';
             document.getElementById('additionalInfo').value = '';
             fileUploadBox.innerHTML = '<p class="text-gray-500">Drag and drop your files here or <span class="text-blue-500 font-bold">browse</span></p>';
             confirmationMessage.style.display = 'none';
             errorMessage.style.display = 'none';
-        });
+            loadingOverlay.style.display = 'none';
+        }
 
         // Handle hamburger menu toggle
         menuToggle.addEventListener('click', () => {
-            if (mobileMenu.style.display === 'block') {
-                mobileMenu.style.display = 'none';
-            } else {
-                mobileMenu.style.display = 'block';
-            }
+            mobileMenu.style.display = mobileMenu.style.display === 'block' ? 'none' : 'block';
         });
     </script>
 
