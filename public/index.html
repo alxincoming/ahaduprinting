@@ -48,6 +48,20 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        /* Mobile menu adjustments */
+        #mobile-menu {
+            display: none;
+        }
+        .menu-icon {
+            cursor: pointer;
+        }
+        .menu-icon span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 4px 0;
+            display: block;
+        }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
@@ -155,15 +169,15 @@
 
         submitBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            confirmationMessage.style.display = 'none';
-            errorMessage.style.display = 'none';
+            confirmationMessage.style.display = 'none';  // Hide confirmation message before submit
+            errorMessage.style.display = 'none';  // Hide error message before submit
 
             const phoneNumber = document.getElementById('phoneNumber').value;
             const additionalInfo = document.getElementById('additionalInfo').value;
 
             // Validate form
             if (!phoneNumber || !fileInput.files.length) {
-                errorMessage.style.display = 'block';  // Show error message
+                errorMessage.style.display = 'block';  // Show error message if validation fails
                 return;
             }
 
@@ -184,17 +198,17 @@
             })
             .then(response => response.json())
             .then(data => {
-                submitBtn.innerHTML = 'Submit Order';  // Reset the button text
+                submitBtn.innerHTML = 'Submit Order';  // Reset the button text after submit
                 if (data.message) {
                     confirmationMessage.style.display = 'block';  // Show confirmation message
                     clearForm();  // Clear form data after submission
                 } else {
-                    errorMessage.style.display = 'block';  // Show error message
+                    errorMessage.style.display = 'block';  // Show error message on failure
                 }
             })
             .catch(err => {
-                submitBtn.innerHTML = 'Submit Order';  // Reset the button text
-                errorMessage.style.display = 'block';  // Show error message
+                submitBtn.innerHTML = 'Submit Order';  // Reset the button text on error
+                errorMessage.style.display = 'block';  // Show error message on failure
                 console.error('Error:', err);
             });
         });
