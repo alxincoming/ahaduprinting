@@ -48,6 +48,20 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        /* Mobile menu adjustments */
+        #mobile-menu {
+            display: none;
+        }
+        .menu-icon {
+            cursor: pointer;
+        }
+        .menu-icon span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 4px 0;
+            display: block;
+        }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
@@ -138,11 +152,11 @@
         const errorMessage = document.getElementById('errorMessage');
         const menuToggle = document.getElementById('menu-toggle');
         const mobileMenu = document.getElementById('mobile-menu');
-
+    
         fileUploadBox.addEventListener('click', () => {
             fileInput.click();
         });
-
+    
         fileInput.addEventListener('change', (event) => {
             const files = event.target.files;
             if (files.length > 0) {
@@ -152,64 +166,58 @@
                 fileUploadBox.innerHTML = '<p class="text-gray-500">Drag and drop your files here or <span class="text-blue-500 font-bold">browse</span></p>';
             }
         });
-
+    
+        // Place your submission handling code here
         submitBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            confirmationMessage.style.display = 'none';
-            errorMessage.style.display = 'none';
-
+            confirmationMessage.style.display = 'none';  // Hide confirmation message before submit
+            errorMessage.style.display = 'none';  // Hide error message before submit
+    
             const phoneNumber = document.getElementById('phoneNumber').value;
             const additionalInfo = document.getElementById('additionalInfo').value;
-
+    
             // Validate form
             if (!phoneNumber || !fileInput.files.length) {
-                errorMessage.style.display = 'block';  // Show error message
+                errorMessage.style.display = 'block';  // Show error message if validation fails
                 return;
             }
-
+    
             const formData = new FormData();
             for (let i = 0; i < fileInput.files.length; i++) {
                 formData.append('files', fileInput.files[i]);
             }
             formData.append('phoneNumber', phoneNumber);
             formData.append('additionalInfo', additionalInfo);
-
+    
             // Show spinner on the submit button
             submitBtn.innerHTML = '<span class="submit-spinner"></span> Submitting...';
-
+    
             // Send form data via Fetch API
             fetch('/api/submit-order', {
                 method: 'POST',
                 body: formData
             })
-            .then(response => {
-                // Check if the response is successful (assuming the response is a status 200)
-                if (response.ok) {
-                    return response.json();  // Convert response to JSON
-                } else {
-                    throw new Error('Error with the submission.');
-                }
-            })
+            .then(response => response.json())
             .then(data => {
-                submitBtn.innerHTML = 'Submit Order';  // Reset the button text
+                submitBtn.innerHTML = 'Submit Order';  // Reset the button text after submit
                 if (data.message) {
                     confirmationMessage.style.display = 'block';  // Show confirmation message
                     clearForm();  // Clear form data after submission
                 } else {
-                    errorMessage.style.display = 'block';  // Show error message
+                    errorMessage.style.display = 'block';  // Show error message on failure
                 }
             })
             .catch(err => {
-                submitBtn.innerHTML = 'Submit Order';  // Reset the button text
-                errorMessage.style.display = 'block';  // Show error message
+                submitBtn.innerHTML = 'Submit Order';  // Reset the button text on error
+                errorMessage.style.display = 'block';  // Show error message on failure
                 console.error('Error:', err);
             });
         });
-
+    
         clearBtn.addEventListener('click', () => {
             clearForm();
         });
-
+    
         function clearForm() {
             fileInput.value = '';
             document.getElementById('phoneNumber').value = '';
@@ -218,7 +226,7 @@
             confirmationMessage.style.display = 'none';
             errorMessage.style.display = 'none';
         }
-
+    
         // Handle hamburger menu toggle
         menuToggle.addEventListener('click', () => {
             mobileMenu.style.display = mobileMenu.style.display === 'block' ? 'none' : 'block';
