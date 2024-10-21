@@ -36,7 +36,7 @@
         }
         /* Full screen loader overlay */
         #loadingOverlay {
-            display: none;
+            display: none;  /* Initially hidden */
             position: fixed;
             top: 0;
             left: 0;
@@ -98,7 +98,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <!-- Logo -->
             <div class="flex items-center">
-                <img src="logo.png" alt="Ahadu Printing Logo" class="h-12">
+                <img src="https://via.placeholder.com/150x50?text=Ahadu+Printing" alt="Ahadu Printing Logo" class="h-12">
                 <span class="ml-4 text-white text-2xl font-bold">Ahadu Printing</span>
             </div>
 
@@ -116,16 +116,16 @@
 
             <!-- Mobile Menu -->
             <div id="mobile-menu" class="absolute top-16 right-0 bg-blue-600 text-white w-full md:hidden text-center">
-                <a href="service.html" class="block py-2 hover:bg-blue-700 transition">Services</a>
-                <a href="about.html" class="block py-2 hover:bg-blue-700 transition">About Us</a>
-                <a href="contact.html" class="block py-2 hover:bg-blue-700 transition">Contact</a>
+                <a href="#services" class="block py-2 hover:bg-blue-700 transition">Services</a>
+                <a href="#about" class="block py-2 hover:bg-blue-700 transition">About Us</a>
+                <a href="#contact" class="block py-2 hover:bg-blue-700 transition">Contact</a>
             </div>
 
             <!-- Desktop Navigation Links -->
             <div class="hidden md:flex space-x-6">
-                <a href="service.html" class="text-white hover:text-gray-200 transition">Services</a>
-                <a href="about.html" class="text-white hover:text-gray-200 transition">About Us</a>
-                <a href="contact.html" class="text-white hover:text-gray-200 transition">Contact</a>
+                <a href="#services" class="text-white hover:text-gray-200 transition">Services</a>
+                <a href="#about" class="text-white hover:text-gray-200 transition">About Us</a>
+                <a href="#contact" class="text-white hover:text-gray-200 transition">Contact</a>
             </div>
         </div>
     </nav>
@@ -215,7 +215,7 @@
             formData.append('additionalInfo', additionalInfo);
 
             // Show loading overlay when form is valid and submitting
-            loadingOverlay.style.display = 'flex';
+            loadingOverlay.style.display = 'flex';  // Show the awaiting message
 
             // Send form data via Fetch API
             fetch('/api/submit-order', {
