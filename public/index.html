@@ -34,63 +34,54 @@
         .error-message {
             background-color: #dc3545;
         }
-        /* Full screen loader overlay */
-        #loadingOverlay {
-            display: none;  /* Initially hidden */
+
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden initially */
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.7);
             z-index: 1000;
             display: flex;
             justify-content: center;
             align-items: center;
             color: white;
-            flex-direction: column;
         }
-        /* Spinning loader */
+
+        /* Spinning loader for the modal */
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            color: black;
+        }
         .loader {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid #3498db;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
+            margin-bottom: 15px;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        .loader-text {
-            font-size: 1.2rem;
-            margin-top: 20px;
-        }
-        /* Hamburger menu styling */
-        .menu-icon {
-            cursor: pointer;
-            display: block;
-        }
-        .menu-icon span {
-            width: 25px;
-            height: 3px;
-            background-color: white;
-            margin: 5px 0;
-            display: block;
-        }
-        /* Hidden mobile menu */
-        #mobile-menu {
-            display: none;
-        }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
 
-    <!-- Full-Screen Loading Overlay -->
-    <div id="loadingOverlay">
-        <div class="loader"></div>
-        <p class="loader-text">Submitting your order, please wait...</p>
+    <!-- Modal Popup for Submitting Order -->
+    <div id="submitModal" class="modal">
+        <div class="modal-content">
+            <div class="loader"></div>
+            <p>Submitting your order, please wait...</p>
+        </div>
     </div>
 
     <!-- Navbar -->
@@ -174,7 +165,7 @@
         const submitBtn = document.getElementById('submitBtn');
         const clearBtn = document.getElementById('clearBtn');
         const confirmationMessage = document.getElementById('confirmationMessage');
-        const loadingOverlay = document.getElementById('loadingOverlay');
+        const submitModal = document.getElementById('submitModal'); // The modal
         const errorMessage = document.getElementById('errorMessage');
         const menuToggle = document.getElementById('menu-toggle');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -214,8 +205,8 @@
             formData.append('phoneNumber', phoneNumber);
             formData.append('additionalInfo', additionalInfo);
 
-            // Show loading overlay when form is valid and submitting
-            loadingOverlay.style.display = 'flex';  // Show the awaiting message
+            // Show modal popup when form is valid and submitting
+            submitModal.style.display = 'flex';  // Show the modal
 
             // Send form data via Fetch API
             fetch('/api/submit-order', {
@@ -224,7 +215,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                loadingOverlay.style.display = 'none';  // Hide loader
+                submitModal.style.display = 'none';  // Hide modal popup
                 if (data.message) {
                     confirmationMessage.style.display = 'block';  // Show confirmation message
                     clearForm();  // Clear form data after submission
@@ -233,7 +224,7 @@
                 }
             })
             .catch(err => {
-                loadingOverlay.style.display = 'none';  // Hide loader
+                submitModal.style.display = 'none';  // Hide modal popup
                 errorMessage.style.display = 'block';  // Show error message
                 console.error('Error:', err);
             });
@@ -250,7 +241,6 @@
             fileUploadBox.innerHTML = '<p class="text-gray-500">Drag and drop your files here or <span class="text-blue-500 font-bold">browse</span></p>';
             confirmationMessage.style.display = 'none';
             errorMessage.style.display = 'none';
-            loadingOverlay.style.display = 'none';
         }
 
         // Handle hamburger menu toggle
