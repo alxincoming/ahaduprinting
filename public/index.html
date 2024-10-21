@@ -176,8 +176,11 @@
             }
             formData.append('phoneNumber', phoneNumber);
             formData.append('additionalInfo', additionalInfo);
-
+            
+            // Show spinner on the submit button
+            submitBtn.innerHTML = '<span class="submit-spinner"></span> Submitting...';
             // Send form data via Fetch API
+            
             fetch('/api/submit-order', {
                 method: 'POST',
                 body: formData
