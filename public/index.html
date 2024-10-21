@@ -20,76 +20,50 @@
         .drop-zone:hover {
             background-color: #e0f2fe;
         }
-        .confirmation-message, .error-message {
+        .confirmation-message {
             display: none;
+            background-color: #28a745;
             color: white;
             padding: 20px;
             text-align: center;
             border-radius: 5px;
             margin-bottom: 20px;
         }
-        .confirmation-message {
-            background-color: #28a745;
-        }
         .error-message {
+            display: none;
             background-color: #dc3545;
-        }
-
-        /* Modal styles */
-        .modal {
-            display: none; /* Hidden initially */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             color: white;
-        }
-
-        /* Spinning loader for the modal */
-        .modal-content {
-            background: #fff;
             padding: 20px;
-            border-radius: 8px;
             text-align: center;
-            color: black;
+            border-radius: 5px;
+            margin-bottom: 20px;
         }
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 15px;
+        /* Hamburger menu styling */
+        .menu-icon {
+            cursor: pointer;
+            display: block;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .menu-icon span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 5px 0;
+            display: block;
+        }
+        /* Hidden mobile menu */
+        #mobile-menu {
+            display: none;
         }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
-
-    <!-- Modal Popup for Submitting Order -->
-    <div id="submitModal" class="modal">
-        <div class="modal-content">
-            <div class="loader"></div>
-            <p>Submitting your order, please wait...</p>
-        </div>
-    </div>
 
     <!-- Navbar -->
     <nav class="bg-gradient-to-r from-blue-500 to-purple-600 shadow-md py-4">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <!-- Logo -->
             <div class="flex items-center">
-                <img src="https://via.placeholder.com/150x50?text=Ahadu+Printing" alt="Ahadu Printing Logo" class="h-12">
+                <img src="logo.png" alt="Ahadu Printing Logo" class="h-12">
                 <span class="ml-4 text-white text-2xl font-bold">Ahadu Printing</span>
             </div>
 
@@ -105,18 +79,18 @@
                 <span></span>
             </div>
 
-            <!-- Mobile Menu -->
+            <!-- Navigation Links -->
             <div id="mobile-menu" class="absolute top-16 right-0 bg-blue-600 text-white w-full md:hidden text-center">
-                <a href="#services" class="block py-2 hover:bg-blue-700 transition">Services</a>
-                <a href="#about" class="block py-2 hover:bg-blue-700 transition">About Us</a>
-                <a href="#contact" class="block py-2 hover:bg-blue-700 transition">Contact</a>
+                <a href="service.html" class="block py-2 hover:bg-blue-700 transition">Services</a>
+                <a href="about.html" class="block py-2 hover:bg-blue-700 transition">About Us</a>
+                <a href="contact.html" class="block py-2 hover:bg-blue-700 transition">Contact</a>
             </div>
 
             <!-- Desktop Navigation Links -->
             <div class="hidden md:flex space-x-6">
-                <a href="#services" class="text-white hover:text-gray-200 transition">Services</a>
-                <a href="#about" class="text-white hover:text-gray-200 transition">About Us</a>
-                <a href="#contact" class="text-white hover:text-gray-200 transition">Contact</a>
+                <a href="service.html" class="text-white hover:text-gray-200 transition">Services</a>
+                <a href="about.html" class="text-white hover:text-gray-200 transition">About Us</a>
+                <a href="contact.html" class="text-white hover:text-gray-200 transition">Contact</a>
             </div>
         </div>
     </nav>
@@ -165,7 +139,6 @@
         const submitBtn = document.getElementById('submitBtn');
         const clearBtn = document.getElementById('clearBtn');
         const confirmationMessage = document.getElementById('confirmationMessage');
-        const submitModal = document.getElementById('submitModal'); // The modal
         const errorMessage = document.getElementById('errorMessage');
         const menuToggle = document.getElementById('menu-toggle');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -192,7 +165,6 @@
             const phoneNumber = document.getElementById('phoneNumber').value;
             const additionalInfo = document.getElementById('additionalInfo').value;
 
-            // Validate form
             if (!phoneNumber || !fileInput.files.length) {
                 errorMessage.style.display = 'block';  // Show error message
                 return;
@@ -205,9 +177,6 @@
             formData.append('phoneNumber', phoneNumber);
             formData.append('additionalInfo', additionalInfo);
 
-            // Show modal popup when form is valid and submitting
-            submitModal.style.display = 'flex';  // Show the modal
-
             // Send form data via Fetch API
             fetch('/api/submit-order', {
                 method: 'POST',
@@ -215,37 +184,34 @@
             })
             .then(response => response.json())
             .then(data => {
-                submitModal.style.display = 'none';  // Hide modal popup
                 if (data.message) {
                     confirmationMessage.style.display = 'block';  // Show confirmation message
-                    clearForm();  // Clear form data after submission
                 } else {
                     errorMessage.style.display = 'block';  // Show error message
                 }
             })
             .catch(err => {
-                submitModal.style.display = 'none';  // Hide modal popup
-                errorMessage.style.display = 'block';  // Show error message
                 console.error('Error:', err);
+                errorMessage.style.display = 'block';  // Show error message
             });
         });
 
         clearBtn.addEventListener('click', () => {
-            clearForm();
-        });
-
-        function clearForm() {
             fileInput.value = '';
             document.getElementById('phoneNumber').value = '';
             document.getElementById('additionalInfo').value = '';
             fileUploadBox.innerHTML = '<p class="text-gray-500">Drag and drop your files here or <span class="text-blue-500 font-bold">browse</span></p>';
             confirmationMessage.style.display = 'none';
             errorMessage.style.display = 'none';
-        }
+        });
 
         // Handle hamburger menu toggle
         menuToggle.addEventListener('click', () => {
-            mobileMenu.style.display = mobileMenu.style.display === 'block' ? 'none' : 'block';
+            if (mobileMenu.style.display === 'block') {
+                mobileMenu.style.display = 'none';
+            } else {
+                mobileMenu.style.display = 'block';
+            }
         });
     </script>
 
