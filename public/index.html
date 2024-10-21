@@ -179,34 +179,41 @@
             
             // Show spinner on the submit button
             submitBtn.innerHTML = '<span class="submit-spinner"></span> Submitting...';
+
             // Send form data via Fetch API
-            
             fetch('/api/submit-order', {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.json())
             .then(data => {
+                submitBtn.innerHTML = 'Submit Order';  // Reset the button text after submit
                 if (data.message) {
                     confirmationMessage.style.display = 'block';  // Show confirmation message
+                    clearForm();  // Clear form data after submission
                 } else {
-                    errorMessage.style.display = 'block';  // Show error message
+                    errorMessage.style.display = 'block';  // Show error message on failure
                 }
             })
             .catch(err => {
+                submitBtn.innerHTML = 'Submit Order';  // Reset the button text on error
+                errorMessage.style.display = 'block';  // Show error message on failure
                 console.error('Error:', err);
-                errorMessage.style.display = 'block';  // Show error message
             });
         });
 
         clearBtn.addEventListener('click', () => {
+            clearForm();
+        });
+
+        function clearForm() {
             fileInput.value = '';
             document.getElementById('phoneNumber').value = '';
             document.getElementById('additionalInfo').value = '';
             fileUploadBox.innerHTML = '<p class="text-gray-500">Drag and drop your files here or <span class="text-blue-500 font-bold">browse</span></p>';
             confirmationMessage.style.display = 'none';
             errorMessage.style.display = 'none';
-        });
+        }
 
         // Handle hamburger menu toggle
         menuToggle.addEventListener('click', () => {
